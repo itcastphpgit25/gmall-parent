@@ -19,7 +19,7 @@ public class GmallUmsApplicationTests {
 	@Test
 	public void contextLoads() {
 		Role role = new Role();
-		role.setName("lch");
+		role.setName("lch666");
 		int insert = roleMapper.insert(role);
 		System.out.println("==="+insert);
 	}
