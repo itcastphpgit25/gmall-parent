@@ -21,4 +21,12 @@ public class GmallGlobalExceptionHandler {
 
         return new CommonResult().failed().validateFailed(e.getMessage());
     }
+
+    //这个放在最后比较好
+    @ExceptionHandler(Exception.class)
+    public Object handle(Exception e){
+        log.error("全局异常处理类感知到异常...");
+
+        return new CommonResult().failed().validateFailed(e.getMessage());
+    }
 }

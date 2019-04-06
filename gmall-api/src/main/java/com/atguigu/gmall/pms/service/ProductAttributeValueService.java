@@ -3,6 +3,8 @@ package com.atguigu.gmall.pms.service;
 import com.atguigu.gmall.pms.entity.ProductAttributeValue;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 存储产品参数信息的表 服务类
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ProductAttributeValueService extends IService<ProductAttributeValue> {
 
+    List<ProductAttributeValue> getProductAttributeValueById(Long productId);
 }

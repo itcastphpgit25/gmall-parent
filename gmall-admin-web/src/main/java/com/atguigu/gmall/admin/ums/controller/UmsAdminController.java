@@ -48,27 +48,28 @@ public class UmsAdminController {
     public Object register(@Valid @RequestBody UmsAdminParam umsAdminParam, BindingResult result) {
         Admin admin = null;
         //TODO 完成注册功能
-     //   boolean errors = result.hasErrors();//返回true则有错
-//        if(!errors){
-//
-//        }else{
-//            //获取村务属性的详细信息
-//            List<FieldError> fieldErrors = result.getFieldErrors();
-//            //存错误信息
-//            HashMap<String, String > e = new HashMap<>();
-//            for (FieldError fieldError : fieldErrors) {
-//                //获取出错的属性名，
-//                String field = fieldError.getField();
-//                //获取当时不满足要求的这个值
-//                Object value = fieldError.getRejectedValue();
-//                //获取提示信息
-//                String message = fieldError.getDefaultMessage();
-//                e.put(field,message);
-//                log.error("属性校验发生错误：属性名[{}],属性值：[{}],错误提示信息:[{}]",field,value,message);
-//            }
-//            return new CommonResult().validateFailed(result);
-//        }
-        int i=10/0;
+        boolean errors = result.hasErrors();//返回true则有错
+        if(!errors){  //正常运行
+             // boolean a=adminService.savaAdmin(umsAdminParam);
+
+        }else{
+            //获取村务属性的详细信息
+            List<FieldError> fieldErrors = result.getFieldErrors();
+            //存错误信息
+            HashMap<String, String > e = new HashMap<>();
+            for (FieldError fieldError : fieldErrors) {
+                //获取出错的属性名，
+                String field = fieldError.getField();
+                //获取当时不满足要求的这个值
+                Object value = fieldError.getRejectedValue();
+                //获取提示信息
+                String message = fieldError.getDefaultMessage();
+                e.put(field,message);
+                log.error("属性校验发生错误：属性名[{}],属性值：[{}],错误提示信息:[{}]",field,value,message);
+            }
+            //返回错误
+            return new CommonResult().validateFailed(result);
+        }
         return new CommonResult().success(admin);
     }
 

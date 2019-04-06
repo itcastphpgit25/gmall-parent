@@ -1,5 +1,6 @@
 package com.atguigu.gmall.ums.service;
 
+import com.atguigu.gmall.to.social.WeiboAccessTokenVo;
 import com.atguigu.gmall.ums.entity.Member;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface MemberService extends IService<Member> {
 
+
+    Member login(String username, String password);
 }

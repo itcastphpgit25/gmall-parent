@@ -19,6 +19,7 @@
         <module>gmall-ums</module>
         <module>gmall-wms</module>
         <module>gmall-mbg</module>
+        <module>gmall-seckill</module>
     </modules>
 
 

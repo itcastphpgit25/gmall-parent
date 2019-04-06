@@ -17,8 +17,14 @@ public class GmallShardingJdbcConfig {
         return dataSource;
     }
 
+    /**
+     *
+     * 分页插件
+     * @return
+     */
     @Bean
     public PaginationInterceptor paginationInterceptor(){
+
         return new PaginationInterceptor();
     }
 }

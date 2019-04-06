@@ -1,8 +1,10 @@
 package com.atguigu.gmall.admin.pms.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.atguigu.gmall.admin.pms.vo.PmsProductCategoryParam;
+import com.atguigu.gmall.pms.entity.ProductCategory;
 import com.atguigu.gmall.pms.service.ProductCategoryService;
+import com.atguigu.gmall.pms.vo.PmsProductCategoryParam;
+import com.atguigu.gmall.pms.vo.PmsProductCategoryWithChildrenItem;
 import com.atguigu.gmall.to.CommonResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -11,10 +13,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商品分类模块Controller
  */
+@CrossOrigin
 @RestController
 @Api(tags = "PmsProductCategoryController", description = "商品分类管理")
 @RequestMapping("/productCategory")
@@ -27,7 +31,10 @@ public class PmsProductCategoryController {
     public Object create(@Validated @RequestBody PmsProductCategoryParam productCategoryParam,
                          BindingResult result) {
         //TODO 添加产品分类
-        return new CommonResult().success(null);
+        productCategoryService.addProductCategory(productCategoryParam);
+
+
+        return new CommonResult().successMessage();
     }
 
     @ApiOperation("修改商品分类")
@@ -37,7 +44,13 @@ public class PmsProductCategoryController {
                          @RequestBody PmsProductCategoryParam productCategoryParam,
                          BindingResult result) {
         //TODO 修改商品分类
-        return new CommonResult().success(null);
+        productCategoryParam.setId(id);
+        boolean b=productCategoryService.updateCategory(id,productCategoryParam);
+        if(!b){
+            return new CommonResult().failed();
+        }
+        return new CommonResult().successMessage();
+
     }
 
     @ApiOperation("分页查询商品分类")
@@ -46,20 +59,30 @@ public class PmsProductCategoryController {
                           @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
                           @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
         //TODO 分页查询商品分类
-        return new CommonResult().success(null);
+        //完成
+        Map<String,Object> map=productCategoryService.pageProductCategory(pageSize,pageNum,parentId);
+        return new CommonResult().success(map);
     }
 
     @ApiOperation("根据id获取商品分类")
     @GetMapping(value = "/{id}")
     public Object getItem(@PathVariable Long id) {
         //TODO 根据id获取商品分类
-        return new CommonResult().success(null);
+        ProductCategory productCategory=productCategoryService.selectCategoryById(id);
+        if(productCategory==null){
+            return new CommonResult().failed();
+        }
+        return new CommonResult().success(productCategory);
     }
 
     @ApiOperation("删除商品分类")
     @PostMapping(value = "/delete/{id}")
     public Object delete(@PathVariable Long id) {
         //TODO 删除商品分类
+        boolean result=productCategoryService.deleteCategoryById(id);
+        if(!result){
+            return new CommonResult().failed();
+        }
         return new CommonResult().success(null);
     }
 
@@ -67,20 +90,35 @@ public class PmsProductCategoryController {
     @PostMapping(value = "/update/navStatus")
     public Object updateNavStatus(@RequestParam("ids") List<Long> ids, @RequestParam("navStatus") Integer navStatus) {
         //TODO 修改导航栏显示状态
-        return new CommonResult().success(null);
+        Integer result=productCategoryService.updateNavStatus(ids,navStatus);
+        if(result>0){
+            return new CommonResult().success(result);
+        }else{
+            return new CommonResult().dataMessage(result);
+        }
     }
 
     @ApiOperation("修改显示状态")
     @PostMapping(value = "/update/showStatus")
     public Object updateShowStatus(@RequestParam("ids") List<Long> ids, @RequestParam("showStatus") Integer showStatus) {
         //TODO 修改显示状态
-        return new CommonResult().success(null);
+        //TODO 根据商品id获取商品编辑信息
+        Integer result=productCategoryService.updateDeleteStatus(ids,showStatus);
+        if(result>0){
+            return new CommonResult().success(result);
+        }else{
+            return new CommonResult().dataMessage(result);
+        }
     }
 
     @ApiOperation("查询所有一级分类及子分类[有难度]")
     @GetMapping(value = "/list/withChildren")
     public Object listWithChildren() {
         //TODO 查询所有一级分类及子分类
-        return new CommonResult().success(null);
+        List<PmsProductCategoryWithChildrenItem> items=productCategoryService.nestedList();
+        return new CommonResult().success(items);
+
+
+
     }
 }
