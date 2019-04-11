@@ -1,7 +1,10 @@
 package com.atguigu.gmall.pms.service;
 
 import com.atguigu.gmall.pms.entity.MemberPrice;
+import com.atguigu.gmall.pms.entity.ProductFullReduction;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2019-03-19
  */
 public interface MemberPriceService extends IService<MemberPrice> {
+
+    //根据productId查询MemberPrice数据
+    List<MemberPrice> getMemberById(Long productId);
+
 
 }

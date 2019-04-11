@@ -3,6 +3,8 @@ package com.atguigu.gmall.pms.service;
 import com.atguigu.gmall.pms.entity.ProductFullReduction;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 产品满减表(只针对同商品) 服务类
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ProductFullReductionService extends IService<ProductFullReduction> {
 
+    List<ProductFullReduction> getProductFullReductionById(Long productId);
 }

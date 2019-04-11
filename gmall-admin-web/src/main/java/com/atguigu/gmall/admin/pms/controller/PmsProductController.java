@@ -1,15 +1,20 @@
 package com.atguigu.gmall.admin.pms.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.atguigu.gmall.admin.pms.vo.PmsProductParam;
-import com.atguigu.gmall.admin.pms.vo.PmsProductQueryParam;
+import com.atguigu.gmall.pms.entity.Product;
+import com.atguigu.gmall.pms.entity.Test;
 import com.atguigu.gmall.pms.service.ProductService;
+import com.atguigu.gmall.pms.vo.PmsProductParam;
+import com.atguigu.gmall.pms.vo.PmsProductQueryParam;
+import com.atguigu.gmall.search.GmallSearchService;
 import com.atguigu.gmall.to.CommonResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,26 +29,34 @@ public class PmsProductController {
     @Reference
     private ProductService productService;
 
+    @Reference(version = "1.0")
+    private GmallSearchService gmallSearchService;
+    //用到事务控制：有难度
     @ApiOperation("创建商品")
     @PostMapping(value = "/create")
-    public Object create(@RequestBody PmsProductParam productParam,
+    public Object create(@Valid @RequestBody PmsProductParam productParam,
                          BindingResult bindingResult) {
         //TODO 查询所有一级分类及子分类
-        return new CommonResult().success(null);
+        productService.addProductParam(productParam);
+        return new CommonResult().successMessage();
     }
 
     @ApiOperation("根据商品id获取商品编辑信息")
     @GetMapping(value = "/updateInfo/{id}")
     public Object getUpdateInfo(@PathVariable Long id) {
         //TODO 根据商品id获取商品编辑信息
-        return new CommonResult().success(null);
+        PmsProductParam pmsProductParam=productService.getProductParam(id);
+        return new CommonResult().success(pmsProductParam);
+        //return new CommonResult();
     }
 
     @ApiOperation("更新商品")
     @PostMapping(value = "/update/{id}")
     public Object update(@PathVariable Long id, @RequestBody PmsProductParam productParam, BindingResult bindingResult) {
         //TODO 更新商品
-        return new CommonResult().success(null);
+        //未完成
+        productService.updateProductById(id,productParam);
+        return new CommonResult().success("操作成功");
     }
 
     @ApiOperation("查询商品")
@@ -52,15 +65,21 @@ public class PmsProductController {
                           @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
                           @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
         //TODO 查询商品
-       Map<String,Object> pageInfo=productService.pageProduct(pageSize,pageNum);
-        return new CommonResult().success(pageInfo);
+        //完成
+        Map<String,Object> map=productService.pageProduct(productQueryParam,pageSize,pageNum);
+
+        return new CommonResult().success(map);
     }
 
     @ApiOperation("根据商品名称或货号模糊查询")
     @GetMapping(value = "/simpleList")
     public Object getList(String  keyword) {
         //TODO 根据商品名称或货号模糊查询
-        return new CommonResult().success(null);
+        List<Product> products=productService.selectProduct(keyword);
+        if(products==null){
+            return new CommonResult().failed();
+        }
+        return new CommonResult().success(products);
     }
 
     @ApiOperation("批量修改审核状态")
@@ -69,15 +88,27 @@ public class PmsProductController {
                                      @RequestParam("verifyStatus") Integer verifyStatus,
                                      @RequestParam("detail") String detail) {
         //TODO 批量修改审核状态
-        return new CommonResult().success(null);
+        boolean result=productService.updateByProduct(ids,verifyStatus,detail);
+        if(!result){
+            return new CommonResult().validateFailed("数据丢失...");
+        }
+        return new CommonResult().success("修改成功...");
     }
 
     @ApiOperation("批量上下架")
     @PostMapping(value = "/update/publishStatus")
     public Object updatePublishStatus(@RequestParam("ids") List<Long> ids,
                                      @RequestParam("publishStatus") Integer publishStatus) {
-        //TODO 批量上下架
-        return new CommonResult().success(null);
+//        //TODO 批量上下架
+//        Integer result=productService.updateByIdsStatus(ids,publishStatus);
+//        if(result>0){
+//            return new CommonResult().success(result);
+//        }else{
+//            return new CommonResult().dataMessage(result);
+//        }
+          productService.publishStatus(ids,publishStatus);
+          return new CommonResult().success(null);
+
     }
 
     @ApiOperation("批量推荐商品")
@@ -85,7 +116,13 @@ public class PmsProductController {
     public Object updateRecommendStatus(@RequestParam("ids") List<Long> ids,
                                       @RequestParam("recommendStatus") Integer recommendStatus) {
         //TODO 批量推荐商品
-        return new CommonResult().success(null);
+        Integer result=productService.updateRecommendStatus(ids,recommendStatus);
+        if(result>0){
+            return new CommonResult().success(result);
+        }else{
+            return new CommonResult().dataMessage(result);
+        }
+
     }
 
     @ApiOperation("批量设为新品")
@@ -93,7 +130,13 @@ public class PmsProductController {
     public Object updateNewStatus(@RequestParam("ids") List<Long> ids,
                                         @RequestParam("newStatus") Integer newStatus) {
         //TODO 批量设为新品
-        return new CommonResult().success(null);
+        Integer result=productService.updateNewStatus(ids,newStatus);
+        if(result>0){
+            return new CommonResult().success(result);
+        }else{
+            return new CommonResult().dataMessage(result);
+        }
+
     }
 
     @ApiOperation("批量修改删除状态")
@@ -101,6 +144,11 @@ public class PmsProductController {
     public Object updateDeleteStatus(@RequestParam("ids") List<Long> ids,
                                   @RequestParam("deleteStatus") Integer deleteStatus) {
         //TODO 根据商品id获取商品编辑信息
-        return new CommonResult().success(null);
+        Integer result=productService.updateDeleteStatus(ids,deleteStatus);
+        if(result>0){
+            return new CommonResult().success(result);
+        }else{
+            return new CommonResult().dataMessage(result);
+        }
     }
 }

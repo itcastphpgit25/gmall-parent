@@ -40,6 +40,36 @@
 			<artifactId>mybatis-plus-boot-starter</artifactId>
 			<version>3.1.0</version>
 		</dependency>
+
+		<!--操作数据库引入了mybatis-plus-->
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-boot-starter</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+		<!--引入shareJDBC-->
+		<dependency>
+			<groupId>io.shardingjdbc</groupId>
+			<artifactId>sharding-jdbc-core</artifactId>
+			<version>2.0.3</version>
+		</dependency>
+		<!--数据库驱动-->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.47</version>
+		</dependency>
+		<!--集成logstash-->
+		<dependency>
+			<groupId>net.logstash.logback</groupId>
+			<artifactId>logstash-logback-encoder</artifactId>
+			<version>4.8</version>
+		</dependency>
+		<!--引入redis-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

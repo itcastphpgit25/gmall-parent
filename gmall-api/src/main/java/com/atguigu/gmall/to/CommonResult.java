@@ -33,6 +33,18 @@ public class CommonResult {
         return this;
     }
 
+    public CommonResult successMessage() {
+        this.code = SUCCESS;
+        this.message = "操作成功";
+        return this;
+    }
+    public CommonResult dataMessage(Object data) {
+        this.code = FAILED;
+        this.message = "操作失败";
+        this.data = data;
+        return this;
+    }
+
 
 
     /**
